@@ -92,7 +92,8 @@ public class UserCom {
 					a=0;
 				}
 			}
-		System.out.print("TODO: Mensaje de despedida");
+		System.out.print("TODO: Mensaje de despedida\n");
+		System.out.print("TODO: Mensaje de despedida\n");
 		
 		}
 	}
