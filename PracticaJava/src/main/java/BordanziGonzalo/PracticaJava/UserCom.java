@@ -1,6 +1,7 @@
 package BordanziGonzalo.PracticaJava;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class UserCom {
@@ -46,9 +47,6 @@ public class UserCom {
 	
 	
 	
-	
-	
-	
 	/*
 	 * MAIN 
 	 */
@@ -71,6 +69,14 @@ public class UserCom {
 				a = 0;
 			}
 		}
+		
+		try {
+			mongoManage mongoBase = new mongoManage("mydb");
+			manager.exportToMongo(mongoBase);
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+		}
+		
 
 		a=1;
 		String ingreso;

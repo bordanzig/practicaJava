@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.mongodb.BasicDBObject;
+
 
 public class CSVManage {
 	
@@ -20,18 +22,14 @@ public class CSVManage {
 		return file;
 	}
 
-
 	public void setFile(String file) {
 		this.file = file;
 	}
-
 
 	public CSVManage(String file){
 		this.setFile(file);
 	}
 	
-	
-	/* Parse Method */
 	public void parseCSV() throws IOException{
 		
 		map = new HashMap<CSVNode, Integer>();
@@ -79,20 +77,26 @@ public class CSVManage {
 		}
 	}
 	
+	public Integer getClicks(CSVNode nodo){
+		CSVNode nodoC = new CSVNode(nodo);
+		nodoC.setCop("C");
+		return getKeyValue(nodoC);
+	}
+	
+	public Integer getPrints(CSVNode nodo){
+		CSVNode nodoP = new CSVNode(nodo);
+		nodoP.setCop("P");
+		return getKeyValue(nodoP);
+	}
+	
 	public void generateCSV(String outputFile)throws IOException{
 		
 		FileWriter writer = new FileWriter(outputFile);
 		
 		for( int i = 0 ; i < lista.size() ; i++ ){
-			CSVNode nodoC = new CSVNode(lista.get(i));
-			CSVNode nodoP = new CSVNode(lista.get(i));
-			String nodo;
 
-			
-			nodoC.setCop("C");
-			nodoP.setCop("P");
-			
-			nodo = nodoC.deconstruct(",", getKeyValue(nodoC), getKeyValue(nodoP));
+			String nodo;
+			nodo = lista.get(i).deconstruct(",", getClicks(lista.get(i)), getPrints(lista.get(i)));
 
 			writer.append(nodo);
 			writer.append("\n");
@@ -100,6 +104,27 @@ public class CSVManage {
 			}
 		writer.flush();
 		writer.close();
+	}
+	
+	public void exportToMongo (mongoManage mongo){
+		mongo.dropCollection("csvColl");
+		for( int i = 0 ; i < lista.size() ; i++ ){
+			BasicDBObject documento = new BasicDBObject("ad_placement",lista.get(i).getAd_placement())
+									.append("format_iab", lista.get(i).getFormat_iab())
+									.append("gender", lista.get(i).getGender())
+									.append("age", lista.get(i).getAge())
+									.append("scholarity", lista.get(i).getScholarity())
+									.append("marital", lista.get(i).getMarital())
+									.append("income",lista.get(i).getIncome())
+									.append("connection",lista.get(i).getConnection())
+									.append("browser", lista.get(i).getBrowser())
+									.append("so", lista.get(i).getSo())
+									.append("interest_id", lista.get(i).getInterest_id())
+									.append("clicks", getClicks(lista.get(i)))
+									.append("prints", getPrints(lista.get(i)));
+			mongo.insertInCollection("csvColl", documento);			
+			
+		}
 	}
 		
 		
