@@ -1,7 +1,6 @@
 package BordanziGonzalo.PracticaJava;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,36 +12,18 @@ import com.mongodb.BasicDBObject;
 public class CSVManage {
 	
 	private HashMap<CSVNode,Integer> map;
-	private String file;
 	private ArrayList<CSVNode> lista;
-	
-	
-	
-	public String getFile() {
-		return file;
-	}
 
-	public void setFile(String file) {
-		this.file = file;
-	}
-
-	public CSVManage(String file){
-		this.setFile(file);
-	}
 	
-	public void parseCSV() throws IOException{
+	public void parseCSV(fileManage fileManager, String file) throws IOException {
 		
 		map = new HashMap<CSVNode, Integer>();
 		lista = new ArrayList<CSVNode>();
-
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String line = null;
+		fileManager.iniciarArchivo(file);
 		
-		line = reader.readLine();
-		
-		while((line=reader.readLine())!=null){
+		while(fileManager.quedanLineas()){
 	    
-			String[] attr = line.split(",");
+			String[] attr = fileManager.obtenerLinea().split(",");
 			CSVNode node = new CSVNode(attr);
 			Integer value = map.get(node);
 			CSVNode listnode = new CSVNode(node);
@@ -65,7 +46,6 @@ public class CSVManage {
 			}
 			
 	    }
-		reader.close();
 	}
 	
 	public Integer getKeyValue(CSVNode nodo){
